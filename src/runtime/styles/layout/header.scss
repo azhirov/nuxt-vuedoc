@@ -1,0 +1,88 @@
+@import "../variables";
+@import "../mixins";
+
+.vuedoc-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  .container {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    max-width: var(--vdoc-screen-max-width);
+  }
+
+  &__social {
+    margin-left: auto;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    a {
+      text-decoration: none;
+      display: inline-flex;
+      transition: opacity .2s;
+      opacity: .7;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__menu {
+    @at-root button#{&} {
+      display: inline-flex;
+      align-items: center;
+      height: var(--vdoc-header-height);
+      padding: 0;
+      justify-content: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+      margin-right: 16px;
+      font-size: 24px;
+      opacity: .7;
+      transition: opacity .2s;
+      &:hover {
+        opacity: 1;
+      }
+
+      @include responsive($vdoc-bp-md) {
+        display: none;
+      }
+    }
+  }
+}
+
+.vuedoc-header-wrap {
+  position: relative;
+  border-bottom: 1px solid var(--vdoc-c-divider-light);
+  padding: 0 24px;
+  height: var(--vdoc-header-height);
+  background-color: #fff;
+  white-space: nowrap;
+  @include responsive($vdoc-bp-md) {
+    padding: 0 32px;
+  }
+}
+
+.vuedoc-header-logo {
+  display: flex;
+  align-items: center;
+  padding-top: 1px;
+  height: var(--vdoc-header-height);
+  transition: opacity .25s;
+  text-decoration: none;
+  &__logo {
+    font-size: 24px;
+  }
+  &__text {
+    font-size: 16px;
+    font-weight: 500;
+    padding-left: 8px;
+    color: #213547;
+  }
+  &:hover {
+    opacity: .6;
+  }
+}

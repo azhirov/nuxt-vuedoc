@@ -1,0 +1,19 @@
+:root {
+  --vdoc-header-height: 55px;
+  --vdoc-screen-max-width: 1376px;
+  --vdoc-sidebar-width-mobile: 320px;
+  --vdoc-sidebar-width-small: 272px;
+  --vdoc-c-divider-light: rgba(60, 60, 60, .12);
+  --vdoc-c-text-1: #213547;
+  --vdoc-c-text-2: rgba(60, 60, 60, .7);
+  --vdoc-c-brand: #42b883;
+  --vdoc-z-index-overlay: 40;
+  --vdoc-z-index-sidebar: 50;
+}
+
+.vuedoc {
+  font-family: system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font-size: 14px;
+}
+
+

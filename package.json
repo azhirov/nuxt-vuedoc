@@ -1,0 +1,54 @@
+{
+  "name": "nuxt-vuedoc",
+  "version": "0.1.0",
+  "description": "Nuxt-based documentation for your projects",
+  "repository": "azhirov/nuxt-vuedoc",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build",
+    "dev": "nuxt playground",
+    "dev:build": "nuxt build playground",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "lint": "eslint .",
+    "sass:convert": "sass -w src/runtime/styles/vuedoc.scss src/runtime/styles/vuedoc.css"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.4.3"
+  },
+  "devDependencies": {
+    "@nuxt/eslint-config": "^0.1.1",
+    "@nuxt/module-builder": "^0.3.0",
+    "@nuxt/types": "^2.16.3",
+    "@nuxt/typescript-build": "^3.0.1",
+    "@types/lodash.template": "^4.5.1",
+    "@types/node": "^18.15.11",
+    "@types/sass": "^1.45.0",
+    "changelogen": "^0.5.3",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.39.0",
+    "lodash.template": "^4.5.0",
+    "nuxt": "^2.16.3",
+    "sass": "1.33.0",
+    "sass-loader": "^10.1.1",
+    "ts-loader": "^8.4.0",
+    "tslib": "^2.5.0",
+    "typescript": "^4.8.4",
+    "vue": "^2.7.10",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10",
+    "webpack": "^4.46.0"
+  }
+}

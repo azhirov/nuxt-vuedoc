@@ -1,0 +1,49 @@
+@import "./normalize.css";
+@import "./main.css";
+.vuedoc-layout {
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+}
+
+.vuedoc-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: var(--vdoc-z-index-sidebar, 10);
+  padding: 0 32px 96px;
+  width: calc(100vw - 64px);
+  max-width: var(--vdoc-sidebar-width-mobile);
+  opacity: 0;
+  background-color: #fff;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate(-100%);
+  transition: background-color 0.5s, opacity 0.5s, transform 0.3s ease;
+}
+@media (min-width: 960px) {
+  .vuedoc-sidebar {
+    top: var(--vdoc-header-height, 0);
+    z-index: 1;
+    border-right: 1px solid var(--vdoc-c-divider-light);
+    width: var(--vdoc-sidebar-width-small);
+    max-width: 100%;
+    opacity: 1;
+    visibility: visible;
+    box-shadow: none;
+    transform: translate(0);
+    transition: border-color 0.5s, background-color 0.5s;
+  }
+}
+
+.vuedoc-sidebar-nav {
+  padding-top: 24px;
+}
+
+/*# sourceMappingURL=vuedoc.css.map */
