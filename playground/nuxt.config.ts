@@ -11,31 +11,19 @@ const config: NuxtConfig = {
         to: '/',
       },
       {
-        title: 'Link',
-        to: '/docs/link',
+        title: 'Hello',
+        to: '/docs/hello',
       },
       {
-        title: 'Link 2',
+        title: 'Group 1',
         items: [
           {
-            title: 'Sub link',
-            to: '/docs/sub-link',
+            title: 'Group index',
+            to: '/docs/group1',
           },
           {
-            title: 'Sub link',
-            to: '/docs/sub-link',
-          },
-          {
-            title: 'Sub link',
-            to: '/docs/sub-link',
-          },
-          {
-            title: 'Sub link',
-            to: '/docs/sub-link',
-          },
-          {
-            title: 'Sub link',
-            to: '/docs/sub-link',
+            title: 'Group page',
+            to: '/docs/group1/group-page',
           },
         ]
       }

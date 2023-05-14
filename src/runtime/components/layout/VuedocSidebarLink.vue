@@ -23,6 +23,7 @@ export default defineComponent({
           to: link.to,
           activeClass: 'vuedoc-sidebar-link--is-active',
           exactActiveClass: 'vuedoc-sidebar-link--is-active',
+          exactPath: true,
         }
       }, [titleEl]);
     }
