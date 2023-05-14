@@ -9,12 +9,19 @@ export default defineComponent({
       required: true,
     }
   },
+  emits: ['click'],
   render(h) {
     const link: any = this.link;
     if (!link) { return null }
     const titleEl = h('span', {
       staticClass: 'vuedoc-sidebar-link__text'
     }, [link.title]);
+
+    const on = {
+      click: () => {
+        this.$emit('click');
+      }
+    }
 
     if (link.to) {
       return h('nuxt-link', {
@@ -24,7 +31,8 @@ export default defineComponent({
           activeClass: 'vuedoc-sidebar-link--is-active',
           exactActiveClass: 'vuedoc-sidebar-link--is-active',
           exactPath: true,
-        }
+        },
+        nativeOn: on,
       }, [titleEl]);
     }
     if (link.href) {
@@ -33,6 +41,7 @@ export default defineComponent({
         domProps: {
           href: link.href,
         },
+        on,
       }, [titleEl]);
     }
     return null;

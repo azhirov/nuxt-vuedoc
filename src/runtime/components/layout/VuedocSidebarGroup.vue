@@ -8,7 +8,13 @@ export default defineComponent({
       type: Object,
       required: true,
     }
-  }
+  },
+emits: ['link-click'],
+  methods: {
+    onLinkClick() {
+      this.$emit('link-click');
+    }
+  },
 });
 </script>
 
@@ -21,6 +27,7 @@ export default defineComponent({
       v-for="(link, i) in value.items"
       :key="i"
       :link="link"
+      @click="onLinkClick"
     />
   </div>
 </template>
