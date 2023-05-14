@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import type { VuedocNav } from '../../types';
 
 export default defineComponent({
   name: 'VuedocSidebar',
@@ -9,7 +10,7 @@ export default defineComponent({
 emits: ['close'],
   data() {
     return {
-      links: JSON.parse(`<%= JSON.stringify(options.links) %>`),
+      links: JSON.parse(`<%= JSON.stringify(options.links) %>`) as VuedocNav,
     }
   },
   methods: {
