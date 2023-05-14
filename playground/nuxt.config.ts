@@ -1,4 +1,5 @@
 import type { NuxtConfig } from '@nuxt/types'
+import path from 'path'
 
 const config: NuxtConfig = {
   buildModules: ['@nuxt/typescript-build'],
@@ -30,6 +31,9 @@ const config: NuxtConfig = {
     ]
   },
   components: false,
+  alias: {
+    '@comp': path.resolve(__dirname, './components'),
+  }
 }
 
 export default config

@@ -43,9 +43,7 @@ export default defineComponent({
       />
       <div class="vuedoc-content-wrapper">
         <div class="vuedoc-content">
-          <div class="container">
-            <Nuxt />
-          </div>
+          <Nuxt />
         </div>
       </div>
     </div>

@@ -27,3 +27,8 @@ export interface MdFileInfo {
   template: string
   frontmatter: Record<string, string>
 }
+
+export interface VuedocTocItem {
+  id: string
+  title: string
+}

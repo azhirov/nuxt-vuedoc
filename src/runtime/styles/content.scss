@@ -1,0 +1,74 @@
+@import "mixins";
+@import "variables";
+
+.vuedoc-md {
+  h1, h2, h3, h4, h5, h6 {
+    position: relative;
+    font-weight: 600;
+    line-height: 1.5;
+    outline: none;
+    scroll-margin-top: calc(var(--vdoc-header-height) - 5px);
+  }
+
+  h1 {
+    margin: 0 0 3rem;
+    font-size: 38px;
+    line-height: 1.4;
+    letter-spacing: -.02em
+  }
+
+  h2 {
+    margin: 4rem 0 1.8rem;
+    border-top: 1px solid var(--vdoc-c-divider-light);
+    padding-top: 1.8rem;
+    font-size: 24px;
+    letter-spacing: -.02em;
+  }
+
+  @include responsive($vdoc-bp-sm) {
+    h1 {
+      font-size:32px;
+      margin-bottom: 1.8rem
+    }
+
+    h1+h2 {
+      margin-top: 36px
+    }
+  }
+
+  h3 {
+    font-size: 19px;
+    letter-spacing: -.01em;
+    margin: 3rem 0 1.25rem
+  }
+
+  h2+h3 {
+    margin-top: 0
+  }
+
+  h4 {
+    font-size: 17px;
+    margin: 1.8rem 0 1rem
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--vt-c-divider-light);
+    margin: 1.8rem 0
+  }
+
+  p, ul, ol, summary {
+    margin-bottom: 1.2em
+  }
+
+  a {
+    font-weight: 500;
+    color: var(--vdoc-c-brand);
+    transition: color .25s;
+    text-decoration-style: dotted;
+    text-decoration: inherit;
+    &:hover {
+      color: var(--vdoc-c-brand-light);
+    }
+  }
+}

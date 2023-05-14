@@ -7,13 +7,15 @@ import {
 } from '@nuxt/kit'
 
 import { promises } from 'node:fs'
-import { join } from 'path'
+import path, { join } from 'path'
 import * as fs from 'fs'
 import { rimraf } from 'rimraf';
 import lodashTemplate from "lodash.template";
 import { createCacheDir, createDir } from './utils'
 import { getMdFiles } from './markdown'
 import { ModuleOptions } from './types'
+import { Nuxt } from '@nuxt/types/nuxt'
+import { BuildModuleOptions } from '@nuxt/module-builder'
 
 async function addComponentFromTemplate(src: string, componentName: string, options: Record<string, any>) {
   const cacheDir = createCacheDir();
@@ -42,6 +44,13 @@ export default defineNuxtModule<ModuleOptions>({
     const docsDir = resolver.resolve(nuxt.options.srcDir, options.docsDir);
     const cacheDir = createCacheDir();
     const mdFiles = await getMdFiles(docsDir, options.docsBaseUrl);
+
+    // add watcher
+    nuxt.hook('build:before', () => {
+      nuxt.options.watch = nuxt.options.watch || [];
+      const docsRelativePath = path.relative(nuxt.options.srcDir, docsDir);
+      nuxt.options.watch.push(docsRelativePath);
+    })
 
     await addComponentsDir({
       path: resolver.resolve( "./runtime/components"),

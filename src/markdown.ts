@@ -1,4 +1,4 @@
-import { createResolver } from '@nuxt/kit'
+import { createResolver, resolvePath, useNuxt } from '@nuxt/kit'
 import { glob } from 'glob'
 import path from 'path'
 import getHash from 'hash-sum'
@@ -8,7 +8,11 @@ import MarkdownIt from 'markdown-it'
 import { componentPlugin } from '@mdit-vue/plugin-component'
 import { sfcPlugin } from '@mdit-vue/plugin-sfc'
 import { frontmatterPlugin } from '@mdit-vue/plugin-frontmatter'
-import { createCacheDir, createDir } from './utils'
+import anchorPlugin from 'markdown-it-anchor'
+import customBlock from 'markdown-it-custom-block';
+import { encode } from 'html-entities';
+import { createCacheDir, createDir, replaceAsync } from './utils'
+import { parse as parseVueFile } from 'vue-docgen-api'
 import type { MdFileInfo } from './types'
 
 export function createMarkdownParser() {
@@ -17,17 +21,54 @@ export function createMarkdownParser() {
   })
     .use(componentPlugin)
     .use(sfcPlugin)
+    .use(anchorPlugin)
+    .use(customBlock, {
+      api(arg) {
+        return `@api(${arg})`
+      },
+    })
     .use(frontmatterPlugin);
 }
 
-export function parseMd(srcPath: string) {
+export function createSimpleMarkdownParser() {
+  return new MarkdownIt({
+    html: false,
+  });
+}
+
+export async function parseComponentApi(rawTemplate: string) {
+  if (!rawTemplate) return '';
+
+  const nuxt = useNuxt();
+  const apiMarkdown = createSimpleMarkdownParser();
+
+  return await replaceAsync(rawTemplate, /@api\((.*?)\)/, async (a, b) => {
+    const path = await resolvePath(b, {
+      alias: nuxt.options.alias,
+    });
+    const parsed = await parseVueFile(path);
+    parsed.props = parsed.props?.map((item) => ({
+      ...item,
+      description: apiMarkdown.render(item.description ?? ''),
+      defaultValue: item.defaultValue?.value ? {
+        ...item.defaultValue,
+        value: apiMarkdown.render(item.defaultValue.value),
+      } : item.defaultValue,
+    }));
+    const str = encode(JSON.stringify(parsed));
+    // noinspection VueMissingComponentImportInspection
+    return `<VuedocComponentApi :value="${str}" />`;
+  });
+}
+
+export async function parseMd(srcPath: string) {
   const markdown = createMarkdownParser();
   const content = fs.readFileSync(srcPath, 'utf-8');
   const env: any = {};
   const tmpl = markdown.render(content, env);
 
   const script = env.sfcBlocks?.script?.content ?? null;
-  let template = env.sfcBlocks?.template?.contentStripped ?? null;
+  let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped ?? null);
   template = `${env.sfcBlocks?.template?.tagOpen}<div class="vuedoc-md">${template}</div>${env.sfcBlocks?.template?.tagClose}`;
   template = `${template || tmpl}${script || ''}`;
   return { template, env };
@@ -39,7 +80,7 @@ export async function getMdFiles(docsDir: string, docsBaseUrl: string) {
   const pagesDir = createDir(resolver.resolve(cacheDir, 'pages'));
 
   const mdFiles = await glob.glob('**/*.md', { cwd: docsDir });
-  return mdFiles.map((mdFile) => {
+  return await Promise.all(mdFiles.map(async (mdFile) => {
     const srcPath = path.resolve(docsDir, mdFile);
     const hash = getHash(srcPath);
     const isIndex = (path.basename(srcPath, path.extname(srcPath)) === 'index');
@@ -54,7 +95,7 @@ export async function getMdFiles(docsDir: string, docsBaseUrl: string) {
     }
     const routeName = slugify(url.replace(/\//g, '-'), { replacement: '-' });
     const tmplPath = path.join(pagesDir, `vuedoc-${hash}.vue`);
-    const { template, env } = parseMd(srcPath);
+    const { template, env } = await parseMd(srcPath);
 
     return {
       srcPath,
@@ -65,5 +106,5 @@ export async function getMdFiles(docsDir: string, docsBaseUrl: string) {
       template,
       frontmatter: env.frontmatter,
     } as MdFileInfo;
-  });
+  }));
 }
