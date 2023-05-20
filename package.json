@@ -21,6 +21,7 @@
     "prepack": "nuxt-module-build",
     "dev": "nuxt playground",
     "dev:build": "nuxt build playground",
+    "dev:generate": "nuxt generate playground",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "sass:convert": "sass -w src/runtime/styles/vuedoc.scss src/runtime/styles/vuedoc.css"
