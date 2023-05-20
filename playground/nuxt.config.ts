@@ -2,6 +2,7 @@ import type { NuxtConfig } from '@nuxt/types'
 import path from 'path'
 
 const config: NuxtConfig = {
+  target: "static",
   buildModules: ['@nuxt/typescript-build'],
   modules: ['../src/module'],
   vuedoc: {
@@ -31,6 +32,9 @@ const config: NuxtConfig = {
     ]
   },
   components: false,
+  router: {
+    base: '/nuxt-vuedoc/'
+  },
   alias: {
     '@comp': path.resolve(__dirname, './components'),
   }
