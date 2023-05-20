@@ -54,6 +54,18 @@ export async function parseComponentApi(rawTemplate: string) {
         ...item.defaultValue,
         value: apiMarkdown.render(item.defaultValue.value),
       } : item.defaultValue,
+    })).filter((item) => !item.tags?.ignore);
+    parsed.events = parsed.events?.map((event) => ({
+      ...event,
+      description: event.description ? apiMarkdown.render(event.description) : event.description,
+    }));
+    parsed.slots = parsed.slots?.map((slot) => ({
+      ...slot,
+      description: slot.description ? apiMarkdown.render(slot.description) : slot.description,
+    }));
+    parsed.methods = parsed.methods?.map((method) => ({
+      ...method,
+      description: method.description ? apiMarkdown.render(method.description) : method.description,
     }));
     const str = encode(JSON.stringify(parsed));
     // noinspection VueMissingComponentImportInspection

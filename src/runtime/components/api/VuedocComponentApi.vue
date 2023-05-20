@@ -31,22 +31,77 @@ export default defineComponent({
         </tr>
       </thead>
       <tbody>
-        <tr
+        <vuedoc-api-prop
           v-for="prop in value.props"
           :key="prop.name"
-          class="vuedoc-c-api-table__row"
-          :class="{'vuedoc-c-api-table__row--required': prop.required}"
-        >
-          <td><code>{{ prop.name }}</code></td>
-          <td v-html="prop.description" />
-          <td><code v-if="prop.type">{{ prop.type.name === 'union' && prop.type.elements ? prop.type.elements.map((item) => item.name).join(' | ') : prop.type.name }}</code></td>
-          <td>
-            <code
-              v-if="prop.defaultValue"
-              v-html="prop.defaultValue.value"
-            />
-          </td>
+          :value="prop"
+        />
+      </tbody>
+    </table>
+    <h2
+      id="events"
+      tabindex="-1"
+    >
+      Events
+    </h2>
+    <table class="vuedoc-c-api-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Params</th>
         </tr>
+      </thead>
+      <tbody>
+        <vuedoc-api-event
+          v-for="event in value.events"
+          :key="event.name"
+          :value="event"
+        />
+      </tbody>
+    </table>
+    <h2
+      id="slots"
+      tabindex="-1"
+    >
+      Slots
+    </h2>
+    <table class="vuedoc-c-api-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Params</th>
+        </tr>
+      </thead>
+      <tbody>
+        <vuedoc-api-slot
+          v-for="slot in value.slots"
+          :key="slot.name"
+          :value="slot"
+        />
+      </tbody>
+    </table>
+    <h2
+      id="public-methods"
+      tabindex="-1"
+    >
+      Public methods
+    </h2>
+    <table class="vuedoc-c-api-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Params</th>
+        </tr>
+      </thead>
+      <tbody>
+        <vuedoc-api-method
+          v-for="method in value.methods"
+          :key="method.name"
+          :value="method"
+        />
       </tbody>
     </table>
   </div>

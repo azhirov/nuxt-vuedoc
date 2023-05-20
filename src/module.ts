@@ -14,8 +14,6 @@ import lodashTemplate from "lodash.template";
 import { createCacheDir, createDir } from './utils'
 import { getMdFiles } from './markdown'
 import { ModuleOptions } from './types'
-import { Nuxt } from '@nuxt/types/nuxt'
-import { BuildModuleOptions } from '@nuxt/module-builder'
 
 async function addComponentFromTemplate(src: string, componentName: string, options: Record<string, any>) {
   const cacheDir = createCacheDir();

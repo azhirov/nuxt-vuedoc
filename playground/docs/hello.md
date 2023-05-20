@@ -25,4 +25,14 @@ Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC
 
 Some content
 
+<ExampleButton some-prop="test">Привет</ExampleButton>
+
 @[api](@comp/ExampleButton.vue)
+
+<script>
+import ExampleButton from "@comp/ExampleButton.vue";
+
+export default {
+  components: { ExampleButton }
+}
+</script>
