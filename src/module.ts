@@ -18,7 +18,6 @@ import { ModuleOptions } from './types'
 async function addComponentFromTemplate(src: string, componentName: string, options: Record<string, any>) {
   const cacheDir = createCacheDir();
   const source = await promises.readFile(src, 'utf-8');
-  console.log(source);
   const compiledTemplate = lodashTemplate(source, {interpolate: /<%=([\s\S]+?)%>/g})({ options });
   createDir(join(cacheDir, 'components'));
   fs.writeFileSync(join(cacheDir, 'components', `${componentName}.vue`), compiledTemplate);

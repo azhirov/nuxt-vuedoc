@@ -2,6 +2,7 @@
 @import "./mixins";
 
 @import "./layout/header.scss";
+@import "./hljs-github.min.css";
 
 .vuedoc-layout {
   backface-visibility: hidden;

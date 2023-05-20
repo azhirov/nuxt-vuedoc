@@ -1,4 +1,4 @@
-import { createResolver, resolvePath, useNuxt } from '@nuxt/kit'
+import {addComponent, createResolver, resolvePath, useNuxt} from '@nuxt/kit'
 import { glob } from 'glob'
 import path from 'path'
 import getHash from 'hash-sum'
@@ -14,6 +14,8 @@ import { encode } from 'html-entities';
 import { createCacheDir, createDir, replaceAsync } from './utils'
 import { parse as parseVueFile } from 'vue-docgen-api'
 import type { MdFileInfo } from './types'
+import { parseComponent } from 'vue-template-compiler';
+import hash_sum from "hash-sum";
 
 export function createMarkdownParser() {
   return new MarkdownIt({
@@ -26,6 +28,9 @@ export function createMarkdownParser() {
       api(arg) {
         return `@api(${arg})`
       },
+      example(arg) {
+        return `@example(${arg})`
+      },
     })
     .use(frontmatterPlugin);
 }
@@ -33,6 +38,31 @@ export function createMarkdownParser() {
 export function createSimpleMarkdownParser() {
   return new MarkdownIt({
     html: false,
+  });
+}
+
+export async function parseExample(rawTemplate: string) {
+  if (!rawTemplate) return '';
+
+  const nuxt = useNuxt();
+  return await replaceAsync(rawTemplate, /@example\((.*?)\)/, async (a, b) => {
+    const path = await resolvePath(b, {
+      alias: nuxt.options.alias,
+    });
+
+    const exampleHash = hash_sum(path);
+    const exampleComponentName = `example-${exampleHash.charAt(0).toUpperCase()}${exampleHash.slice(1)}`;
+    await addComponent({
+      name: exampleComponentName,
+      global: false,
+      filePath: path,
+      isAsync: true,
+    } as any);
+
+    const content = fs.readFileSync(path, 'utf-8');
+    const parsed = parseComponent(content);
+    console.log(parsed);
+    return `<vuedoc-example source="${encode(content)}"><${exampleComponentName} /></vuedoc-example>`;
   });
 }
 
@@ -81,6 +111,7 @@ export async function parseMd(srcPath: string) {
 
   const script = env.sfcBlocks?.script?.content ?? null;
   let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped ?? null);
+  template = await parseExample(template);
   template = `${env.sfcBlocks?.template?.tagOpen}<div class="vuedoc-md">${template}</div>${env.sfcBlocks?.template?.tagClose}`;
   template = `${template || tmpl}${script || ''}`;
   return { template, env };
