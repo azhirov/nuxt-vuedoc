@@ -14,9 +14,9 @@ import { encode } from 'html-entities';
 import { createCacheDir, createDir, replaceAsync } from './utils'
 import { parse as parseVueFile } from 'vue-docgen-api'
 import type {MdFileInfo, VuedocTocItem} from './types'
-import { parseComponent } from 'vue-template-compiler';
 import hash_sum from "hash-sum";
 import { parse as parseHtml } from 'node-html-parser';
+
 export function createMarkdownParser() {
   return new MarkdownIt({
     html: true,
@@ -29,7 +29,6 @@ export function createMarkdownParser() {
         return `@api(${arg})`
       },
       example(arg) {
-        console.log('example found: ' + arg);
         return `@example(${arg})`
       },
     })
@@ -105,12 +104,10 @@ export async function parseComponentApi(rawTemplate: string) {
 }
 
 export async function parseMd(srcPath: string) {
-  console.log('PARSE MD CALLED');
   const markdown = createMarkdownParser();
   const content = fs.readFileSync(srcPath, 'utf-8');
   const env: any = {};
   const tmpl = markdown.render(content, env);
-  console.log({ srcPath, tmpl, template: env.sfcBlocks?.template });
 
   const script = env.sfcBlocks?.script?.content ?? null;
   let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped ?? null);
