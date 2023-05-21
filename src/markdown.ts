@@ -29,6 +29,7 @@ export function createMarkdownParser() {
         return `@api(${arg})`
       },
       example(arg) {
+        console.log('example found: ' + arg);
         return `@example(${arg})`
       },
     })
@@ -43,9 +44,8 @@ export function createSimpleMarkdownParser() {
 
 export async function parseExample(rawTemplate: string) {
   if (!rawTemplate) return '';
-
   const nuxt = useNuxt();
-  return await replaceAsync(rawTemplate, /@example\((.*?)\)/, async (a, b) => {
+  return await replaceAsync(rawTemplate, /@example\((.*?)\)/g, async (a, b) => {
     const path = await resolvePath(b, {
       alias: nuxt.options.alias,
     });
@@ -70,7 +70,7 @@ export async function parseComponentApi(rawTemplate: string) {
   const nuxt = useNuxt();
   const apiMarkdown = createSimpleMarkdownParser();
 
-  return await replaceAsync(rawTemplate, /@api\((.*?)\)/, async (a, b) => {
+  return await replaceAsync(rawTemplate, /@api\((.*?)\)/g, async (a, b) => {
     const path = await resolvePath(b, {
       alias: nuxt.options.alias,
     });
@@ -80,7 +80,7 @@ export async function parseComponentApi(rawTemplate: string) {
       description: apiMarkdown.render(item.description ?? ''),
       defaultValue: item.defaultValue?.value ? {
         ...item.defaultValue,
-        value: apiMarkdown.render(item.defaultValue.value),
+        value: apiMarkdown.renderInline(item.defaultValue.value),
       } : item.defaultValue,
     })).filter((item) => !item.tags?.ignore);
     parsed.events = parsed.events?.map((event) => ({
@@ -105,10 +105,12 @@ export async function parseComponentApi(rawTemplate: string) {
 }
 
 export async function parseMd(srcPath: string) {
+  console.log('PARSE MD CALLED');
   const markdown = createMarkdownParser();
   const content = fs.readFileSync(srcPath, 'utf-8');
   const env: any = {};
   const tmpl = markdown.render(content, env);
+  console.log({ srcPath, tmpl, template: env.sfcBlocks?.template });
 
   const script = env.sfcBlocks?.script?.content ?? null;
   let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped ?? null);

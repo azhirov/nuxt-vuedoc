@@ -13,6 +13,9 @@
   --vdoc-c-bg: #fff;
   --vdoc-z-index-overlay: 40;
   --vdoc-z-index-sidebar: 50;
+  --vdoc-c-text-code: #476582;
+  --vdoc-c-mute: #f6f6f7;
+  --vdoc-code-font-size: .875em;
 }
 
 .vuedoc {

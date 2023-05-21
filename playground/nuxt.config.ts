@@ -13,8 +13,8 @@ const config: NuxtConfig = {
         to: '/',
       },
       {
-        title: 'Hello',
-        to: '/docs/hello',
+        title: 'Primary button',
+        to: '/docs/primary-button',
       },
       {
         title: 'Group 1',

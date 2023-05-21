@@ -113,6 +113,7 @@ export default defineComponent({
   &__actions {
     border-top: 1px solid var(--vdoc-c-divider-light);
     padding: 8px 16px;
+    display: flex;
   }
   &__action {
     padding: 0;

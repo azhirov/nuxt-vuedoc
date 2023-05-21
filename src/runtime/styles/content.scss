@@ -71,4 +71,16 @@
       color: var(--vdoc-c-brand-light);
     }
   }
+
+  :not(pre)>code {
+    border-radius: 4px;
+    padding: 3px 6px;
+    color: var(--vdoc-c-text-code);
+    background-color: var(--vdoc-c-mute);
+    transition: color .5s, background-color .5s;
+  }
+
+  :not(pre,h1,h2,h3,h4,h5,h6)>code {
+    font-size: var(--vdoc-code-font-size);
+  }
 }

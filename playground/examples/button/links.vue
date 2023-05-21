@@ -3,30 +3,30 @@ import {defineComponent} from 'vue'
 import ButtonPrimary from "~/components/Button/ButtonPrimary.vue";
 
 export default defineComponent({
-  name: "ExampleBtn1",
   components: {ButtonPrimary}
 })
 </script>
 
 <template>
-  <div class="vuedoc-test-1">
-    <ButtonPrimary color="default">
-      Button
+  <div class="vex-links">
+    <ButtonPrimary
+      color="default"
+      href="https://google.com"
+      target="_blank"
+    >
+      HTML Link
     </ButtonPrimary>
-    <ButtonPrimary color="blue">
-      Button
-    </ButtonPrimary>
-    <ButtonPrimary color="red">
-      Button
-    </ButtonPrimary>
-    <ButtonPrimary color="green">
-      Button
+    <ButtonPrimary
+      color="default"
+      to="/"
+    >
+      Router link
     </ButtonPrimary>
   </div>
 </template>
 
 <style scoped lang="scss">
-.vuedoc-test-1 {
+.vex-links {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
