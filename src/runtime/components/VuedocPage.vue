@@ -4,7 +4,7 @@
     :class="{'vuedoc-page-wrapper--has-toc': headers.length}"
   >
     <vuedoc-toc
-      v-if="headers.length"
+      v-if="headers.length && pageInit"
       :value="headers"
       :active="activeHeading"
     />
@@ -12,7 +12,10 @@
       ref="page"
       class="vuedoc-page-content"
     >
-      <component :is="pageName" />
+      <component
+        :is="pageName"
+        @hook:mounted="onPageReady"
+      />
     </div>
   </div>
 </template>
@@ -46,6 +49,7 @@ export default defineComponent({
       observer: null as IntersectionObserver | null,
       activeHeading: null as string | null,
       onscroll: null as null | (() => void),
+      pageInit: false,
     };
   },
   head() {
@@ -55,14 +59,23 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.onscroll = throttleAndDebounce(this.setActiveLink, 100);
-    document.addEventListener('scroll', this.onscroll);
-    this.onscroll();
+    if (this.pageInit) {
+      this.initOnScroll();
+    }
   },
   beforeUnmount () {
     document.removeEventListener('scroll', this.onscroll!);
   },
   methods: {
+    initOnScroll() {
+      this.onscroll = throttleAndDebounce(this.setActiveLink, 100);
+      document.addEventListener('scroll', this.onscroll);
+      this.onscroll();
+    },
+    onPageReady() {
+      this.pageInit = true;
+      this.initOnScroll();
+    },
     setActiveLink() {
       const scrollY = window.scrollY
       const innerHeight = window.innerHeight
