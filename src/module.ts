@@ -98,6 +98,7 @@ export default defineNuxtModule<ModuleOptions>({
           props: {
             pageName: `Vuedoc${item.hash.charAt(0).toUpperCase()}${item.hash.slice(1)}`,
             frontmatter: item.frontmatter,
+            headers: item.headers,
           },
         } as any);
       });

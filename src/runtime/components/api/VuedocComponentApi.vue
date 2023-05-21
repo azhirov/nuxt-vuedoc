@@ -1,13 +1,25 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import type { ComponentDoc } from 'vue-docgen-api';
+import type { EventDescriptor, MethodDescriptor, PropDescriptor, SlotDescriptor} from 'vue-docgen-api';
 
 export default defineComponent({
   name: 'VuedocComponentApi',
   props: {
-    value: {
-      type: Object as PropType<ComponentDoc>,
-      required: true,
+    props: {
+      type: Array as PropType<PropDescriptor[]>,
+      default: () => [],
+    },
+    events: {
+      type: Array as PropType<EventDescriptor[]>,
+      default: () => [],
+    },
+    slots: {
+      type: Array as PropType<SlotDescriptor[]>,
+      default: () => [],
+    },
+    methods: {
+      type: Array as PropType<MethodDescriptor[]>,
+      default: () => [],
     },
   },
 });
@@ -16,7 +28,7 @@ export default defineComponent({
 <template>
   <div class="vuedoc-c-api">
     <h2
-      id="props"
+      id="api-props"
       tabindex="-1"
     >
       Props
@@ -32,14 +44,14 @@ export default defineComponent({
       </thead>
       <tbody>
         <vuedoc-api-prop
-          v-for="prop in value.props"
+          v-for="prop in props"
           :key="prop.name"
           :value="prop"
         />
       </tbody>
     </table>
     <h2
-      id="events"
+      id="api-events"
       tabindex="-1"
     >
       Events
@@ -54,14 +66,14 @@ export default defineComponent({
       </thead>
       <tbody>
         <vuedoc-api-event
-          v-for="event in value.events"
+          v-for="event in events"
           :key="event.name"
           :value="event"
         />
       </tbody>
     </table>
     <h2
-      id="slots"
+      id="api-slots"
       tabindex="-1"
     >
       Slots
@@ -76,14 +88,14 @@ export default defineComponent({
       </thead>
       <tbody>
         <vuedoc-api-slot
-          v-for="slot in value.slots"
+          v-for="slot in slots"
           :key="slot.name"
           :value="slot"
         />
       </tbody>
     </table>
     <h2
-      id="public-methods"
+      id="api-public-methods"
       tabindex="-1"
     >
       Public methods
@@ -98,7 +110,7 @@ export default defineComponent({
       </thead>
       <tbody>
         <vuedoc-api-method
-          v-for="method in value.methods"
+          v-for="method in methods"
           :key="method.name"
           :value="method"
         />

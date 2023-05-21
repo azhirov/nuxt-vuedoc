@@ -13,10 +13,10 @@ import customBlock from 'markdown-it-custom-block';
 import { encode } from 'html-entities';
 import { createCacheDir, createDir, replaceAsync } from './utils'
 import { parse as parseVueFile } from 'vue-docgen-api'
-import type { MdFileInfo } from './types'
+import type {MdFileInfo, VuedocTocItem} from './types'
 import { parseComponent } from 'vue-template-compiler';
 import hash_sum from "hash-sum";
-
+import { parse as parseHtml } from 'node-html-parser';
 export function createMarkdownParser() {
   return new MarkdownIt({
     html: true,
@@ -60,8 +60,6 @@ export async function parseExample(rawTemplate: string) {
     } as any);
 
     const content = fs.readFileSync(path, 'utf-8');
-    const parsed = parseComponent(content);
-    console.log(parsed);
     return `<vuedoc-example source="${encode(content)}"><${exampleComponentName} /></vuedoc-example>`;
   });
 }
@@ -97,9 +95,12 @@ export async function parseComponentApi(rawTemplate: string) {
       ...method,
       description: method.description ? apiMarkdown.render(method.description) : method.description,
     }));
-    const str = encode(JSON.stringify(parsed));
+    const props = encode(JSON.stringify(parsed.props));
+    const events = encode(JSON.stringify(parsed.events));
+    const slots = encode(JSON.stringify(parsed.slots));
+    const methods = encode(JSON.stringify(parsed.methods));
     // noinspection VueMissingComponentImportInspection
-    return `<VuedocComponentApi :value="${str}" />`;
+    return `<VuedocComponentApi :props="${props}" :events="${events}" :slots="${slots}" :methods="${methods}" />`;
   });
 }
 
@@ -112,9 +113,51 @@ export async function parseMd(srcPath: string) {
   const script = env.sfcBlocks?.script?.content ?? null;
   let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped ?? null);
   template = await parseExample(template);
+  env.headers = parseHeaders(template);
   template = `${env.sfcBlocks?.template?.tagOpen}<div class="vuedoc-md">${template}</div>${env.sfcBlocks?.template?.tagClose}`;
   template = `${template || tmpl}${script || ''}`;
   return { template, env };
+}
+
+export function parseHeaders(template: string) {
+  const parsedHtml = parseHtml(template);
+  const vuedocList = parsedHtml.getElementsByTagName('VuedocComponentApi');
+
+  const dict = {
+    props: {
+      title: 'Props',
+      id: 'api-props',
+    },
+    events: {
+      title: 'Events',
+      id: 'api-events',
+    },
+    slots: {
+      title: 'Slots',
+      id: 'api-slots',
+    },
+    methods: {
+      title: 'Public methods',
+      id: 'api-public-methods',
+    }
+  }
+  vuedocList.forEach((el) => {
+    const headers: string[] = [];
+    ['props', 'events', 'slots', 'methods'].forEach((header) => {
+      const info = dict[header as keyof typeof dict];
+      if (el.getAttribute(header) || el.getAttribute(`:${header}`)) {
+        headers.push(`<h2 id="${info.id}">${info.title}</h2>`);
+      }
+    })
+    el.replaceWith(headers.join(''));
+  });
+  const h2list = parsedHtml.querySelectorAll('h2[id]');
+  return h2list.map((el) => {
+    return {
+      title: el.textContent,
+      id: el.id,
+    } as VuedocTocItem
+  });
 }
 
 export async function getMdFiles(docsDir: string, docsBaseUrl: string) {
@@ -148,6 +191,7 @@ export async function getMdFiles(docsDir: string, docsBaseUrl: string) {
       hash,
       template,
       frontmatter: env.frontmatter,
+      headers: env.headers,
     } as MdFileInfo;
   }));
 }

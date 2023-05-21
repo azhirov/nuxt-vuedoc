@@ -64,15 +64,15 @@ export default defineComponent({
             v-for="(heading, i) in value"
             :key="heading.id + '#' + i"
           >
-            <a
-              :href="`#${heading.id}`"
+            <nuxt-link
+              :to="`#${heading.id}`"
               class="vuedoc-toc-link"
               :class="{'vuedoc-toc-link--is-active': active === heading.id}"
               :title="heading.title"
-              @click="onClick"
+              @click.native="onClick"
             >
               {{ heading.title }}
-            </a>
+            </nuxt-link>
           </li>
         </ul>
       </nav>

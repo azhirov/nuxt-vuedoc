@@ -26,6 +26,7 @@ export interface MdFileInfo {
   hash: string
   template: string
   frontmatter: Record<string, string>
+  headers: VuedocTocItem[],
 }
 
 export interface VuedocTocItem {

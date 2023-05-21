@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent, PropType} from 'vue'
 import { VuedocTocItem } from '../../types'
 import { throttleAndDebounce } from '../utils'
 
@@ -36,10 +36,13 @@ export default defineComponent({
       type: Object,
       default: () => ({}),
     },
+    headers: {
+      type: Array as PropType<VuedocTocItem[]>,
+      default: () => [],
+    }
   },
   data() {
     return {
-      headers: [] as VuedocTocItem[],
       observer: null as IntersectionObserver | null,
       activeHeading: null as string | null,
       onscroll: null as null | (() => void),
@@ -55,19 +58,6 @@ export default defineComponent({
     this.onscroll = throttleAndDebounce(this.setActiveLink, 100);
     document.addEventListener('scroll', this.onscroll);
     this.onscroll();
-    this.$nextTick(() => {
-      const target = this.$refs.page as HTMLElement | undefined;
-      console.log(target);
-      if (!target) return;
-      const headers = Array.from(target.querySelectorAll('h2[id]')) as HTMLElement[];
-      console.log(headers);
-      this.headers = headers.map((item: HTMLElement) => {
-        return {
-          title: item.innerText,
-          id: item.getAttribute('id') ?? item.innerText,
-        }
-      });
-    })
   },
   beforeUnmount () {
     document.removeEventListener('scroll', this.onscroll!);
