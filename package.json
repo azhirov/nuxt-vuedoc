@@ -5,6 +5,10 @@
   "repository": "azhirov/nuxt-vuedoc",
   "license": "MIT",
   "type": "module",
+  "files": [
+    "/dist",
+    "/README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/types.d.ts",
@@ -14,9 +18,6 @@
   },
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "prepack": "nuxt-module-build",
     "dev": "nuxt playground",
@@ -27,12 +28,24 @@
     "sass:convert": "sass -w src/runtime/styles/vuedoc.scss src/runtime/styles/vuedoc.css"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.4.3"
-  },
-  "devDependencies": {
+    "@nuxt/kit": "<=3.2.3",
+    "lodash.template": "^4.5.0",
+    "rimraf": "^5.0.0",
+    "glob": "^10.2.3",
+    "hash-sum": "^2.0.0",
+    "highlight.js": "^11.8.0",
+    "html-entities": "^2.3.3",
+    "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-custom-block": "^0.1.2",
+    "node-html-parser": "^6.1.5",
+    "slugify": "^1.6.6",
     "@mdit-vue/plugin-component": "^0.12.0",
     "@mdit-vue/plugin-frontmatter": "^0.12.0",
     "@mdit-vue/plugin-sfc": "^0.12.0",
+    "vue-docgen-api": "^4.72.2"
+  },
+  "devDependencies": {
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/module-builder": "^0.3.0",
     "@nuxt/types": "^2.16.3",
@@ -44,27 +57,27 @@
     "changelogen": "^0.5.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.39.0",
-    "glob": "^10.2.3",
-    "hash-sum": "^2.0.0",
-    "highlight.js": "^11.8.0",
-    "html-entities": "^2.3.3",
-    "lodash.template": "^4.5.0",
-    "markdown-it": "^13.0.1",
-    "markdown-it-anchor": "^8.6.7",
-    "markdown-it-custom-block": "^0.1.2",
-    "node-html-parser": "^6.1.5",
     "nuxt": "^2.16.3",
-    "rimraf": "^5.0.0",
     "sass": "1.33.0",
     "sass-loader": "^10.1.1",
-    "slugify": "^1.6.6",
     "ts-loader": "^8.4.0",
     "tslib": "^2.5.0",
     "typescript": "^4.8.4",
     "vue": "^2.7.10",
-    "vue-docgen-api": "^4.72.2",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
     "webpack": "^4.46.0"
+  },
+  "peerDependenciesMeta": {
+    "nuxt": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "peerDependencies": {
+    "nuxt": "^2.16.1",
+    "vue": "^2.6.1"
   }
 }

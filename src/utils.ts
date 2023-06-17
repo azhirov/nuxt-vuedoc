@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import { useNuxt } from '@nuxt/kit'
-import { join } from 'path'
+import path from 'path'
 
 export function createDir(path: string) {
   if (!existsSync(path)) {
@@ -11,7 +11,7 @@ export function createDir(path: string) {
 
 export function createCacheDir() {
   const nuxt = useNuxt();
-  const cacheDir = join(nuxt.options.rootDir, '.vuedoc');
+  const cacheDir = path.join(nuxt.options.rootDir, '.vuedoc');
   return createDir(cacheDir);
 }
 
@@ -22,5 +22,5 @@ export async function replaceAsync(str: string, regex: RegExp, asyncFn: (match: 
     promises.push(promise);
   });
   const data = await Promise.all(promises);
-  return str.replace(regex, () => data.shift() ?? '');
+  return str.replace(regex, () => data.shift() || '');
 }

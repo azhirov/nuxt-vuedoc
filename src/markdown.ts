@@ -3,7 +3,7 @@ import { glob } from 'glob'
 import path from 'path'
 import getHash from 'hash-sum'
 import slugify from 'slugify'
-import fs from 'fs'
+import { readFileSync } from 'node:fs'
 import MarkdownIt from 'markdown-it'
 import { componentPlugin } from '@mdit-vue/plugin-component'
 import { sfcPlugin } from '@mdit-vue/plugin-sfc'
@@ -14,7 +14,6 @@ import { encode } from 'html-entities';
 import { createCacheDir, createDir, replaceAsync } from './utils'
 import { parse as parseVueFile } from 'vue-docgen-api'
 import type {MdFileInfo, VuedocTocItem} from './types'
-import hash_sum from "hash-sum";
 import { parse as parseHtml } from 'node-html-parser';
 
 export function createMarkdownParser() {
@@ -49,7 +48,7 @@ export async function parseExample(rawTemplate: string) {
       alias: nuxt.options.alias,
     });
 
-    const exampleHash = hash_sum(path);
+    const exampleHash = getHash(path);
     const exampleComponentName = `example-${exampleHash.charAt(0).toUpperCase()}${exampleHash.slice(1)}`;
     await addComponent({
       name: exampleComponentName,
@@ -58,7 +57,7 @@ export async function parseExample(rawTemplate: string) {
       isAsync: true,
     } as any);
 
-    const content = fs.readFileSync(path, 'utf-8');
+    const content = readFileSync(path, 'utf-8');
     return `<vuedoc-example source="${encode(content)}"><${exampleComponentName} /></vuedoc-example>`;
   });
 }
@@ -76,7 +75,7 @@ export async function parseComponentApi(rawTemplate: string) {
     const parsed = await parseVueFile(path);
     parsed.props = parsed.props?.map((item) => ({
       ...item,
-      description: apiMarkdown.render(item.description ?? ''),
+      description: apiMarkdown.render(item.description || ''),
       defaultValue: item.defaultValue?.value ? {
         ...item.defaultValue,
         value: apiMarkdown.renderInline(item.defaultValue.value),
@@ -105,12 +104,12 @@ export async function parseComponentApi(rawTemplate: string) {
 
 export async function parseMd(srcPath: string) {
   const markdown = createMarkdownParser();
-  const content = fs.readFileSync(srcPath, 'utf-8');
+  const content = readFileSync(srcPath, 'utf-8');
   const env: any = {};
   const tmpl = markdown.render(content, env);
 
-  const script = env.sfcBlocks?.script?.content ?? null;
-  let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped ?? null);
+  const script = env.sfcBlocks?.script?.content || null;
+  let template = await parseComponentApi(env.sfcBlocks?.template?.contentStripped || null);
   template = await parseExample(template);
   env.headers = parseHeaders(template);
   template = `${env.sfcBlocks?.template?.tagOpen}<div class="vuedoc-md">${template}</div>${env.sfcBlocks?.template?.tagClose}`;

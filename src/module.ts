@@ -6,10 +6,8 @@ import {
   extendPages,
 } from '@nuxt/kit'
 
-import { promises } from 'node:fs'
-import path, { join } from 'path'
-import * as fs from 'fs'
-import { rimraf } from 'rimraf';
+import { promises, writeFileSync, rmSync } from 'node:fs'
+import path from 'path'
 import lodashTemplate from "lodash.template";
 import { createCacheDir, createDir } from './utils'
 import { getMdFiles } from './markdown'
@@ -19,8 +17,8 @@ async function addComponentFromTemplate(src: string, componentName: string, opti
   const cacheDir = createCacheDir();
   const source = await promises.readFile(src, 'utf-8');
   const compiledTemplate = lodashTemplate(source, {interpolate: /<%=([\s\S]+?)%>/g})({ options });
-  createDir(join(cacheDir, 'components'));
-  fs.writeFileSync(join(cacheDir, 'components', `${componentName}.vue`), compiledTemplate);
+  createDir(path.join(cacheDir, 'components'));
+  writeFileSync(path.join(cacheDir, 'components', `${componentName}.vue`), compiledTemplate);
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -36,7 +34,7 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup (options, nuxt) {
     const resolver = createResolver(import.meta.url)
-    rimraf.rimrafSync(resolver.resolve(nuxt.options.rootDir, '.vuedoc'));
+    rmSync(resolver.resolve(nuxt.options.rootDir, '.vuedoc'), { recursive: true, force: true });
 
     const docsDir = resolver.resolve(nuxt.options.srcDir, options.docsDir);
     const cacheDir = createCacheDir();
@@ -44,9 +42,9 @@ export default defineNuxtModule<ModuleOptions>({
 
     // add watcher
     nuxt.hook('build:before', () => {
-      nuxt.options.watch = nuxt.options.watch || [];
+      (nuxt.options as any).watch = (nuxt.options as any).watch || [];
       const docsRelativePath = path.relative(nuxt.options.srcDir, docsDir);
-      nuxt.options.watch.push(docsRelativePath);
+      (nuxt.options as any).watch.push(docsRelativePath);
     })
 
     await addComponentsDir({
@@ -61,7 +59,7 @@ export default defineNuxtModule<ModuleOptions>({
       links: options.nav,
     });
     await addComponentFromTemplate(resolver.resolve('./runtime/templates/VuedocLayoutHeader.vue'), 'VuedocLayoutHeader', {
-      github: options.github ?? null,
+      github: options.github || null,
     });
 
     await addComponentsDir({
@@ -78,7 +76,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     for (const mdObjectsKey in mdFiles) {
       const mdItem = mdFiles[mdObjectsKey];
-      fs.writeFileSync(mdItem.tmplPath, mdItem.template);
+      writeFileSync(mdItem.tmplPath, mdItem.template);
     }
 
     await addComponentsDir({

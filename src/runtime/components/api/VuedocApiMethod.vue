@@ -14,7 +14,7 @@ export default defineComponent({
   computed: {
     params() {
       const value = this.value.params?.map((prop) => {
-        const propType = prop.type?.name ?? 'any';
+        const propType = prop.type?.name || 'any';
         let str = `<code><strong>${prop.name}</strong>: ${propType}</code>`;
         if (prop.description && typeof prop.description === 'string') {
           str = `${str}<br />${prop.description}`;
