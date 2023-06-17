@@ -3,33 +3,24 @@ import {
   createResolver,
   addLayout,
   addComponentsDir,
-  addComponent, addTemplate,
+  extendPages,
 } from '@nuxt/kit'
 
-import { existsSync, mkdirSync } from 'node:fs'
-import { join } from 'path'
+import { promises } from 'node:fs'
+import path, { join } from 'path'
 import * as fs from 'fs'
-
-// Module options TypeScript interface definition
-export interface ModuleOptions {
-  nav: any
-  github?: string
-}
+import { rimraf } from 'rimraf';
+import lodashTemplate from "lodash.template";
+import { createCacheDir, createDir } from './utils'
+import { getMdFiles } from './markdown'
+import { ModuleOptions } from './types'
 
 async function addComponentFromTemplate(src: string, componentName: string, options: Record<string, any>) {
-  if (!existsSync(join(__dirname, '.cache'))) {
-    mkdirSync(join(__dirname, '.cache'));
-  }
-
-  const template = addTemplate({
-    src,
-    filename: join(__dirname, '.cache', 'components', `${componentName}.vue`),
-    options,
-  })
-  await addComponent({
-    name: componentName,
-    filePath: template.dst,
-  });
+  const cacheDir = createCacheDir();
+  const source = await promises.readFile(src, 'utf-8');
+  const compiledTemplate = lodashTemplate(source, {interpolate: /<%=([\s\S]+?)%>/g})({ options });
+  createDir(join(cacheDir, 'components'));
+  fs.writeFileSync(join(cacheDir, 'components', `${componentName}.vue`), compiledTemplate);
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -39,16 +30,31 @@ export default defineNuxtModule<ModuleOptions>({
   },
   // Default configuration options of the Nuxt module
   defaults: {
-    nav: {},
+    nav: [],
+    docsDir: 'docs',
+    docsBaseUrl: 'docs',
   },
   async setup (options, nuxt) {
     const resolver = createResolver(import.meta.url)
+    rimraf.rimrafSync(resolver.resolve(nuxt.options.rootDir, '.vuedoc'));
+
+    const docsDir = resolver.resolve(nuxt.options.srcDir, options.docsDir);
+    const cacheDir = createCacheDir();
+    const mdFiles = await getMdFiles(docsDir, options.docsBaseUrl);
+
+    // add watcher
+    nuxt.hook('build:before', () => {
+      nuxt.options.watch = nuxt.options.watch || [];
+      const docsRelativePath = path.relative(nuxt.options.srcDir, docsDir);
+      nuxt.options.watch.push(docsRelativePath);
+    })
 
     await addComponentsDir({
       path: resolver.resolve( "./runtime/components"),
       pathPrefix: false,
       extensions: ['vue'],
       watch: true,
+      global: false,
     });
 
     await addComponentFromTemplate(resolver.resolve('./runtime/templates/VuedocSidebar.vue'), 'VuedocSidebar', {
@@ -58,12 +64,44 @@ export default defineNuxtModule<ModuleOptions>({
       github: options.github ?? null,
     });
 
+    await addComponentsDir({
+      path: resolver.resolve(cacheDir, 'components'),
+      extensions: ['vue'],
+      watch: true,
+      global: false,
+    })
+
     addLayout({
       src: resolver.resolve('./runtime/layouts/VuedocLayout.vue'),
       filename: 'layouts/VuedocLayout.vue',
     }, 'vuedoc');
 
-    // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
-    // addPlugin(resolver.resolve('./runtime/plugin'))
+    for (const mdObjectsKey in mdFiles) {
+      const mdItem = mdFiles[mdObjectsKey];
+      fs.writeFileSync(mdItem.tmplPath, mdItem.template);
+    }
+
+    await addComponentsDir({
+      path: resolver.resolve(cacheDir, 'pages'),
+      global: false,
+      extensions: ['vue'],
+      watch: true,
+    });
+
+    extendPages((pages) => {
+      mdFiles.forEach((item) => {
+        pages.push({
+          path: item.url,
+          name: item.routeName,
+          /* Nuxt 2 property */
+          component: resolver.resolve('./runtime/components/VuedocPage.vue'),
+          props: {
+            pageName: `Vuedoc${item.hash.charAt(0).toUpperCase()}${item.hash.slice(1)}`,
+            frontmatter: item.frontmatter,
+            headers: item.headers,
+          },
+        } as any);
+      });
+    });
   }
 })

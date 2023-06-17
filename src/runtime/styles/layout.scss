@@ -2,6 +2,7 @@
 @import "./mixins";
 
 @import "./layout/header.scss";
+@import "./hljs-github.min.css";
 
 .vuedoc-layout {
   backface-visibility: hidden;
@@ -80,6 +81,9 @@
     padding: 64px 64px 96px;
   }
   @include responsive($vdoc-bp-lg) {
+    padding: 64px 0 96px 48px;
+  }
+  @include responsive(1300px) {
     padding: 64px 0 96px 64px;
   }
   @include responsive($vdoc-bp-xl) {

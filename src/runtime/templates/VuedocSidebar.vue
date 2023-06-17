@@ -1,16 +1,23 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import type { VuedocNav } from '../../types';
 
 export default defineComponent({
   name: 'VuedocSidebar',
   props: {
     isActive: Boolean,
   },
+emits: ['close'],
   data() {
     return {
-      links: JSON.parse(`<%= JSON.stringify(options.links) %>`),
+      links: JSON.parse(`<%= JSON.stringify(options.links) %>`) as VuedocNav,
     }
   },
+  methods: {
+    onLinkClick() {
+      this.$emit('close');
+    }
+  }
 })
 </script>
 
@@ -27,12 +34,14 @@ export default defineComponent({
           v-if="item.to || item.href"
           :key="`link-${i}`"
           :link="item"
+          @click="onLinkClick"
         />
         <vuedoc-sidebar-group
           v-else-if="item.title"
           :key="`group-${i}`"
           :to="item.to"
           :value="item"
+          @link-click="onLinkClick"
         />
       </template>
     </nav>

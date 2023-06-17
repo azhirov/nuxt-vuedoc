@@ -37,12 +37,13 @@ export default defineComponent({
         />
       </transition>
       <vuedoc-layout-header @toggle-sidebar="toggleSidebar" />
-      <vuedoc-sidebar :is-active="isSidebarActive" />
+      <vuedoc-sidebar
+        :is-active="isSidebarActive"
+        @close="isSidebarActive = false"
+      />
       <div class="vuedoc-content-wrapper">
         <div class="vuedoc-content">
-          <div class="container">
-            <Nuxt />
-          </div>
+          <Nuxt />
         </div>
       </div>
     </div>

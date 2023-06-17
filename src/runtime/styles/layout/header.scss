@@ -5,6 +5,8 @@
   position: fixed;
   top: 0;
   width: 100%;
+  background: var(--vdoc-c-header-bg);
+  z-index: var(--vdoc-z-index-header);
 
   .container {
     display: flex;
