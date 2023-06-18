@@ -1,5 +1,92 @@
 @import "./normalize.css";
 @import "./main.css";
+@import "./hljs-github.min.css";
+.vuedoc-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--vdoc-c-header-bg);
+  z-index: var(--vdoc-z-index-header);
+}
+.vuedoc-header .container {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  max-width: var(--vdoc-screen-max-width);
+}
+.vuedoc-header__social {
+  margin-left: auto;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+.vuedoc-header__social a {
+  text-decoration: none;
+  display: inline-flex;
+  transition: opacity 0.2s;
+  opacity: 0.7;
+}
+.vuedoc-header__social a:hover {
+  opacity: 1;
+}
+button.vuedoc-header__menu {
+  display: inline-flex;
+  align-items: center;
+  height: var(--vdoc-header-height);
+  padding: 0;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  margin-right: 16px;
+  font-size: 24px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+button.vuedoc-header__menu:hover {
+  opacity: 1;
+}
+@media (min-width: 960px) {
+  button.vuedoc-header__menu {
+    display: none;
+  }
+}
+
+.vuedoc-header-wrap {
+  position: relative;
+  border-bottom: 1px solid var(--vdoc-c-divider-light);
+  padding: 0 24px;
+  height: var(--vdoc-header-height);
+  background-color: #fff;
+  white-space: nowrap;
+}
+@media (min-width: 960px) {
+  .vuedoc-header-wrap {
+    padding: 0 32px;
+  }
+}
+
+.vuedoc-header-logo {
+  display: flex;
+  align-items: center;
+  padding-top: 1px;
+  height: var(--vdoc-header-height);
+  transition: opacity 0.25s;
+  text-decoration: none;
+}
+.vuedoc-header-logo__logo {
+  font-size: 24px;
+}
+.vuedoc-header-logo__text {
+  font-size: 16px;
+  font-weight: 500;
+  padding-left: 8px;
+  color: #213547;
+}
+.vuedoc-header-logo:hover {
+  opacity: 0.6;
+}
+
 .vuedoc-layout {
   backface-visibility: hidden;
   display: flex;
@@ -26,12 +113,18 @@
   overflow-y: auto;
   transform: translate(-100%);
   transition: background-color 0.5s, opacity 0.5s, transform 0.3s ease;
+  border-right: 1px solid var(--vdoc-c-divider-light);
+}
+.vuedoc-sidebar--is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0);
+  transition: background-color 0.5s, opacity 0.25s, transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 @media (min-width: 960px) {
   .vuedoc-sidebar {
     top: var(--vdoc-header-height, 0);
     z-index: 1;
-    border-right: 1px solid var(--vdoc-c-divider-light);
     width: var(--vdoc-sidebar-width-small);
     max-width: 100%;
     opacity: 1;
@@ -41,9 +134,161 @@
     transition: border-color 0.5s, background-color 0.5s;
   }
 }
+@media (min-width: 1441px) {
+  .vuedoc-sidebar {
+    padding: 0 32px 96px calc((100% - var(--vdoc-screen-max-width)) / 2);
+    width: calc((100% - var(--vdoc-screen-max-width)) / 2 + var(--vdoc-sidebar-width-small));
+  }
+}
 
 .vuedoc-sidebar-nav {
   padding-top: 24px;
+}
+
+.vuedoc-content-wrapper {
+  padding-top: var(--vdoc-header-height);
+}
+@media (max-width: 768px) {
+  .vuedoc-content-wrapper {
+    overflow-x: hidden;
+  }
+}
+@media (min-width: 960px) {
+  .vuedoc-content-wrapper {
+    padding-left: var(--vdoc-sidebar-width-small);
+  }
+}
+@media (min-width: 1441px) {
+  .vuedoc-content-wrapper {
+    padding-left: calc((100vw - var(--vdoc-screen-max-width)) / 2 + var(--vdoc-sidebar-width-small));
+  }
+}
+
+.vuedoc-content {
+  padding: 32px 24px 96px;
+}
+@media (min-width: 768px) {
+  .vuedoc-content {
+    padding: 48px 32px 96px;
+  }
+}
+@media (min-width: 960px) {
+  .vuedoc-content {
+    padding: 64px 64px 96px;
+  }
+}
+@media (min-width: 1280px) {
+  .vuedoc-content {
+    padding: 64px 0 96px 48px;
+  }
+}
+@media (min-width: 1300px) {
+  .vuedoc-content {
+    padding: 64px 0 96px 64px;
+  }
+}
+@media (min-width: 1441px) {
+  .vuedoc-content {
+    padding: 64px 0 96px 96px;
+  }
+}
+
+.vuedoc-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  transition: opacity 0.5s;
+  z-index: var(--vdoc-z-index-overlay);
+}
+@media (min-width: 960px) {
+  .vuedoc-overlay {
+    display: none;
+  }
+}
+
+.vuedoc-overlay-enter-active, .vuedoc-overlay-leave-active {
+  transition: opacity 0.5s;
+}
+
+.vuedoc-overlay-enter, .vuedoc-overlay-leave-to {
+  opacity: 0;
+}
+
+.vuedoc-overlay-leave-to {
+  transition-duration: 0.25s;
+}
+
+.vuedoc-md h1, .vuedoc-md h2, .vuedoc-md h3, .vuedoc-md h4, .vuedoc-md h5, .vuedoc-md h6 {
+  position: relative;
+  font-weight: 600;
+  line-height: 1.5;
+  outline: none;
+  scroll-margin-top: calc(var(--vdoc-header-height) - 5px);
+}
+.vuedoc-md h1 {
+  margin: 0 0 3rem;
+  font-size: 38px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.vuedoc-md h2 {
+  margin: 4rem 0 1.8rem;
+  border-top: 1px solid var(--vdoc-c-divider-light);
+  padding-top: 1.8rem;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+@media (min-width: 768px) {
+  .vuedoc-md h1 {
+    font-size: 32px;
+    margin-bottom: 1.8rem;
+  }
+  .vuedoc-md h1 + h2 {
+    margin-top: 36px;
+  }
+}
+.vuedoc-md h3 {
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  margin: 3rem 0 1.25rem;
+}
+.vuedoc-md h2 + h3 {
+  margin-top: 0;
+}
+.vuedoc-md h4 {
+  font-size: 17px;
+  margin: 1.8rem 0 1rem;
+}
+.vuedoc-md hr {
+  border: none;
+  border-top: 1px solid var(--vt-c-divider-light);
+  margin: 1.8rem 0;
+}
+.vuedoc-md p, .vuedoc-md ul, .vuedoc-md ol, .vuedoc-md summary {
+  margin-bottom: 1.2em;
+}
+.vuedoc-md a {
+  font-weight: 500;
+  color: var(--vdoc-c-brand);
+  transition: color 0.25s;
+  text-decoration-style: dotted;
+  text-decoration: inherit;
+}
+.vuedoc-md a:hover {
+  color: var(--vdoc-c-brand-light);
+}
+.vuedoc-md :not(pre) > code {
+  border-radius: 4px;
+  padding: 3px 6px;
+  color: var(--vdoc-c-text-code);
+  background-color: var(--vdoc-c-mute);
+  transition: color 0.5s, background-color 0.5s;
+}
+.vuedoc-md :not(pre, h1, h2, h3, h4, h5, h6) > code {
+  font-size: var(--vdoc-code-font-size);
 }
 
 /*# sourceMappingURL=vuedoc.css.map */

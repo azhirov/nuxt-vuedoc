@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import '../styles/vuedoc.scss';
+import '../styles/vuedoc.css';
 
 export default defineComponent({
   name: 'VuedocStylesProvider',
