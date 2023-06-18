@@ -59,7 +59,7 @@ export default defineNuxtModule<ModuleOptions>({
       links: options.nav,
     });
     await addComponentFromTemplate(resolver.resolve('./runtime/templates/VuedocLayoutHeader.vue'), 'VuedocLayoutHeader', {
-      github: JSON.stringify(options.github || ''),
+      github: options.github || '',
     });
 
     await addComponentsDir({

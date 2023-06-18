@@ -6,7 +6,7 @@ export default defineComponent({
   emits: ['toggle-sidebar'],
   data() {
     return {
-      github: JSON.parse('<%= options.github %>')
+      github: '<%= JSON.parse(JSON.stringify(options.github)) %>',
     }
   },
   methods: {
