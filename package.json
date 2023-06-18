@@ -1,6 +1,6 @@
 {
   "name": "nuxt-vuedoc",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Nuxt-based documentation for your projects",
   "repository": "azhirov/nuxt-vuedoc",
   "license": "MIT",
