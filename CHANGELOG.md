@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v3.0.0-pre
+
+[compare changes](https://github.com/azhirov/nuxt-vuedoc/compare/v0.1.6...v3.0.0-pre)
+
+### 🏡 Chore
+
+- **release:** V0.1.6" ([192cf99](https://github.com/azhirov/nuxt-vuedoc/commit/192cf99))
+
+### ❤️ Contributors
+
+- Artem Zhirov ([@azhirov](http://github.com/azhirov))
+
 ## v0.1.5
 
 [compare changes](https://undefined/undefined/compare/v0.1.4...v0.1.5)
