@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import {useHead} from "#imports";
+
+useHead({
+  htmlAttrs: {
+    class: 'vuedoc',
+  }
+})
+</script>
+
 <script lang="ts">
 import { defineComponent } from 'vue'
 /* Do not import components in this file! */
@@ -43,7 +53,7 @@ export default defineComponent({
       />
       <div class="vuedoc-content-wrapper">
         <div class="vuedoc-content">
-          <Nuxt />
+          <slot />
         </div>
       </div>
     </div>

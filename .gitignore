@@ -20,9 +20,9 @@ dist
 # Nuxt
 .nuxt
 .output
+.data
 .vercel_build_output
 .build-*
-.env
 .netlify
 
 # Testing

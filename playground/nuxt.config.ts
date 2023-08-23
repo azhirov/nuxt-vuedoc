@@ -1,9 +1,6 @@
-import type { NuxtConfig } from '@nuxt/types'
 import path from 'path'
 
-const config: NuxtConfig = {
-  target: "static",
-  buildModules: ['@nuxt/typescript-build'],
+export default defineNuxtConfig({
   modules: ['../src/module'],
   vuedoc: {
     github: 'https://github.com/on-org/on-frontend-components',
@@ -31,13 +28,11 @@ const config: NuxtConfig = {
       }
     ]
   },
-  components: false,
-  router: {
-    base: '/nuxt-vuedoc/'
-  },
   alias: {
     '@comp': path.resolve(__dirname, './components'),
-  }
-}
-
-export default config
+  },
+  app: {
+    baseURL: '/nuxt-vuedoc/'
+  },
+  devtools: { enabled: true }
+})

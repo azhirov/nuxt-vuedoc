@@ -20,15 +20,16 @@
   "types": "./dist/types.d.ts",
   "scripts": {
     "prepack": "nuxt-module-build",
-    "dev": "nuxt playground",
-    "dev:build": "nuxt build playground",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "dev:generate": "nuxt generate playground",
     "release": "npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "sass:convert": "sass -w src/runtime/styles/vuedoc.scss src/runtime/styles/vuedoc.css"
   },
   "dependencies": {
-    "@nuxt/kit": "<=3.2.3",
+    "@nuxt/kit": "^3.6.5",
     "lodash.template": "^4.5.0",
     "rimraf": "^5.0.0",
     "glob": "^10.2.3",
@@ -43,30 +44,25 @@
     "@mdit-vue/plugin-component": "^0.12.0",
     "@mdit-vue/plugin-frontmatter": "^0.12.0",
     "@mdit-vue/plugin-sfc": "^0.12.0",
-    "vue-docgen-api": "^4.72.2"
+    "vue-docgen-api": "^4.74.0"
   },
   "devDependencies": {
+    "@types/node": "^18.17.3",
+    "@nuxt/devtools": "latest",
     "@nuxt/eslint-config": "^0.1.1",
-    "@nuxt/module-builder": "^0.3.0",
+    "@nuxt/module-builder": "^0.4.0",
+    "@nuxt/schema": "^3.6.5",
+    "changelogen": "^0.5.4",
+    "eslint": "^8.46.0",
+    "nuxt": "^3.6.5",
     "@nuxt/types": "^2.16.3",
     "@nuxt/typescript-build": "^3.0.1",
     "@types/hash-sum": "^1.0.0",
     "@types/lodash.template": "^4.5.1",
-    "@types/node": "^18.15.11",
     "@types/sass": "^1.45.0",
-    "changelogen": "^0.5.3",
     "cross-env": "^7.0.3",
-    "eslint": "^8.39.0",
-    "nuxt": "^2.16.3",
-    "sass": "1.33.0",
-    "sass-loader": "^10.1.1",
-    "ts-loader": "^8.4.0",
-    "tslib": "^2.5.0",
-    "typescript": "^4.8.4",
-    "vue": "^2.7.10",
-    "vue-server-renderer": "^2.7.10",
-    "vue-template-compiler": "^2.7.10",
-    "webpack": "^4.46.0"
+    "sass": "^1.66.1",
+    "typescript": "^4.8.4"
   },
   "peerDependenciesMeta": {
     "nuxt": {
@@ -77,7 +73,7 @@
     }
   },
   "peerDependencies": {
-    "nuxt": "^2.16.1",
-    "vue": "^2.6.1"
+    "nuxt": "^3.0.0",
+    "vue": "^3.0.0"
   }
 }

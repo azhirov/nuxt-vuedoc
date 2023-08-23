@@ -14,13 +14,21 @@
     >
       <component
         :is="pageName"
-        @hook:mounted="onPageReady"
+        @vue:mounted="onPageReady"
       />
     </div>
   </div>
 </template>
 
+<script setup lang="ts">
+import { definePageMeta } from '#imports';
+definePageMeta({
+  layout: "vuedoc",
+});
+</script>
+
 <script lang="ts">
+
 import {defineComponent, PropType} from 'vue'
 import { VuedocTocItem } from '../../types'
 import { throttleAndDebounce } from '../utils'
