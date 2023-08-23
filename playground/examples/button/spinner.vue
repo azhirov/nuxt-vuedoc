@@ -1,7 +1,6 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import ButtonPrimary from "~/components/Button/ButtonPrimary.vue";
-import {clearTimeout} from "timers";
 
 export default defineComponent({
   components: {ButtonPrimary},

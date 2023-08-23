@@ -72,6 +72,7 @@ export default defineNuxtModule<ModuleOptions>({
     addLayout({
       src: resolver.resolve('./runtime/layouts/VuedocLayout.vue'),
       filename: 'layouts/VuedocLayout.vue',
+      write: true,
     }, 'vuedoc');
 
     for (const mdObjectsKey in mdFiles) {
@@ -81,9 +82,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     await addComponentsDir({
       path: resolver.resolve(cacheDir, 'pages'),
-      global: false,
+      global: true,
       extensions: ['vue'],
       watch: true,
+
     });
 
     extendPages((pages) => {
@@ -91,8 +93,7 @@ export default defineNuxtModule<ModuleOptions>({
         pages.push({
           path: item.url,
           name: item.routeName,
-          /* Nuxt 2 property */
-          component: resolver.resolve('./runtime/components/VuedocPage.vue'),
+          file: resolver.resolve('./runtime/components/VuedocPage.vue'),
           props: {
             pageName: `Vuedoc${item.hash.charAt(0).toUpperCase()}${item.hash.slice(1)}`,
             frontmatter: item.frontmatter,

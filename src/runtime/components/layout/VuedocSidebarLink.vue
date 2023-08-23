@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent, h, resolveComponent} from 'vue'
 
 export default defineComponent({
   name: 'VuedocSidebarLink',
@@ -10,11 +10,11 @@ export default defineComponent({
     }
   },
   emits: ['click'],
-  render(h) {
+  render() {
     const link: any = this.link;
     if (!link) { return null }
     const titleEl = h('span', {
-      staticClass: 'vuedoc-sidebar-link__text'
+      class: 'vuedoc-sidebar-link__text'
     }, [link.title]);
 
     const on = {
@@ -24,23 +24,20 @@ export default defineComponent({
     }
 
     if (link.to) {
-      return h('nuxt-link', {
-        staticClass: 'vuedoc-sidebar-link',
-        props: {
-          to: link.to,
-          activeClass: 'vuedoc-sidebar-link--is-active',
-          exactActiveClass: 'vuedoc-sidebar-link--is-active',
-          exactPath: true,
-        },
+      const linkComponent = resolveComponent('NuxtLink');
+      return h(linkComponent, {
+        class: 'vuedoc-sidebar-link',
+        to: link.to,
+        activeClass: 'vuedoc-sidebar-link--is-active',
+        exactActiveClass: 'vuedoc-sidebar-link--is-active',
+        exactPath: true,
         nativeOn: on,
-      }, [titleEl]);
+      }, () => [titleEl]);
     }
     if (link.href) {
       return h('a', {
-        staticClass: 'vuedoc-sidebar-link',
-        domProps: {
-          href: link.href,
-        },
+        class: 'vuedoc-sidebar-link',
+        href: link.href,
         on,
       }, [titleEl]);
     }
