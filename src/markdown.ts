@@ -93,10 +93,10 @@ export async function parseComponentApi(rawTemplate: string) {
       ...method,
       description: method.description ? apiMarkdown.render(method.description) : method.description,
     }));
-    const props = encode(JSON.stringify(parsed.props));
-    const events = encode(JSON.stringify(parsed.events));
-    const slots = encode(JSON.stringify(parsed.slots));
-    const methods = encode(JSON.stringify(parsed.methods));
+    const props = parsed.props ? encode(JSON.stringify(parsed.props)) : undefined;
+    const events = parsed.events ? encode(JSON.stringify(parsed.events)) : undefined;
+    const slots = parsed.slots ? encode(JSON.stringify(parsed.slots)) : undefined;
+    const methods = parsed.methods ? encode(JSON.stringify(parsed.methods)) : undefined;
     // noinspection VueMissingComponentImportInspection
     return `<VuedocComponentApi :props="${props}" :events="${events}" :slots="${slots}" :methods="${methods}" />`;
   });
